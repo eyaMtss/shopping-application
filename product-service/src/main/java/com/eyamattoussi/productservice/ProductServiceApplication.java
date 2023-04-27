@@ -9,6 +9,8 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
+import java.math.BigDecimal;
+
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
 @EnableMongoRepositories
 public class ProductServiceApplication {
@@ -20,7 +22,7 @@ public class ProductServiceApplication {
 	@Bean
 	public CommandLineRunner initialData(ProductRepository productRepository){
 		return args ->
-			productRepository.save(new Product("productN1", "dress", "red dress", 250.000));
+			productRepository.save(new Product("productN1", "dress", "red dress", BigDecimal.valueOf(250)));
 
 	}
 }
