@@ -8,7 +8,6 @@ public class ProductMapperImpl implements ProductMapper {
     @Override
     public Product productRequestDtoToProduct(ProductRequestDto productRequestDto) {
         return Product.builder()
-                .id(productRequestDto.getId())
                 .name(productRequestDto.getName())
                 .description(productRequestDto.getDescription())
                 .price(productRequestDto.getPrice())

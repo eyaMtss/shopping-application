@@ -9,6 +9,6 @@ public interface ProductService {
     ProductResponseDto getProductById(String id);
     List<ProductResponseDto> getProducts();
     ProductResponseDto addProduct(ProductRequestDto productRequestDto);
-    ProductResponseDto updateProduct(ProductRequestDto productRequestDto);
+    ProductResponseDto updateProduct(String id, ProductRequestDto productRequestDto);
     void deleteProduct(String id);
 }

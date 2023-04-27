@@ -23,10 +23,10 @@ public class ProductController {
         return new ResponseEntity<>(productService.addProduct(productRequestDTO), HttpStatus.CREATED);
     }
 
-    @PutMapping(path = "/update")
-    public ResponseEntity<ProductResponseDto> updateProduct(@Valid @RequestBody ProductRequestDto productRequestDTO){
+    @PutMapping(path = "/update/{id}")
+    public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable String id, @Valid @RequestBody ProductRequestDto productRequestDTO){
         try {
-            return new ResponseEntity<>(productService.updateProduct(productRequestDTO), HttpStatus.CREATED);
+            return new ResponseEntity<>(productService.updateProduct(id, productRequestDTO), HttpStatus.CREATED);
         } catch (Exception e) {
             throw new ProductNotFoundException("Product not found");
         }
