@@ -1,63 +1,43 @@
 package com.eyamattoussi.orderservice.service;
 
+import com.eyamattoussi.orderservice.dto.OrderLineItemsDto;
 import com.eyamattoussi.orderservice.dto.OrderRequestDto;
-import com.eyamattoussi.orderservice.dto.InventoryResponseDto;
-import com.eyamattoussi.orderservice.mapper.OrderMapperImpl;
 import com.eyamattoussi.orderservice.model.Order;
+import com.eyamattoussi.orderservice.model.OrderLineItems;
 import com.eyamattoussi.orderservice.repository.OrderRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
+
 @Service
 @Slf4j
-public class OrderServiceImpl implements OrderService {
+public class OrderServiceImpl {
     @Autowired
     private OrderRepository orderRepository;
-    private OrderMapperImpl orderMapper = new OrderMapperImpl();
-    @Override
-    public InventoryResponseDto getOrderById(String id) {
-        log.info("Getting a product");
-        return orderRepository.findById(id).isPresent() ?
-                orderMapper.orderToOrderResponseDto(orderRepository.findById(id).get()) : null;
-    }
 
-    @Override
-    public List<InventoryResponseDto> getOrders() {
-        log.info("Getting all orders ...");
-        return orderRepository.findAll()
+    public Order placeOrder(OrderRequestDto orderRequest) {
+        Order order = new Order();
+        order.setOrderNumber(UUID.randomUUID().toString());
+
+        List<OrderLineItems> orderLineItems = orderRequest.getOrderLineItemsDtoList()
                 .stream()
-                .map(order -> orderMapper.orderToOrderResponseDto(order))
+                .map(this::mapToDto)
                 .toList();
+
+        order.setOrderLineItemsList(orderLineItems);
+
+        return orderRepository.save(order);
+
     }
 
-    @Override
-    public InventoryResponseDto addOrder(OrderRequestDto orderRequestDto) {
-        log.info("Saving new order ...");
-        return orderMapper.orderToOrderResponseDto(orderRepository.save(orderMapper.orderRequestDtoToOrder(orderRequestDto)));
-    }
-
-    @Override
-    public InventoryResponseDto updateOrder(String id, OrderRequestDto orderRequestDto) {
-        log.info("Updating ...");
-        return null;
-        /*Order existingOrder = orderRepository.findById(id).isPresent() ?
-                orderRepository.findById(id).get() : null;
-        if (existingOrder == null) {
-            return null;
-        }
-        else {
-            existingOrder.setName(orderRequestDto.getName());
-            existingOrder.setDescription(orderRequestDto.getDescription());
-            existingOrder.setPrice(orderRequestDto.getPrice());
-            return orderMapper.orderToOrderResponseDto(orderRepository.save(existingOrder));
-        }*/
-    }
-
-    @Override
-    public void deleteOrder(String id) {
-        log.info("Deleting ...");
-        orderRepository.deleteById(id);
+    private OrderLineItems mapToDto(OrderLineItemsDto orderLineItemsDto) {
+        OrderLineItems orderLineItems = new OrderLineItems();
+        orderLineItems.setPrice(orderLineItemsDto.getPrice());
+        orderLineItems.setQuantity(orderLineItemsDto.getQuantity());
+        orderLineItems.setSkuCode(orderLineItemsDto.getSkuCode());
+        return orderLineItems;
     }
 }
