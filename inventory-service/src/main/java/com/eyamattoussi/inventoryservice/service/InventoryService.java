@@ -1,6 +1,7 @@
 package com.eyamattoussi.inventoryservice.service;
 
 import com.eyamattoussi.inventoryservice.dto.InventoryResponseDto;
+import com.eyamattoussi.inventoryservice.model.Inventory;
 import com.eyamattoussi.inventoryservice.repository.InventoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -28,5 +29,8 @@ public class InventoryService {
                                 .isInStock(inventory.getQuantity() > 0)
                                 .build()
                 ).toList();
+    }
+    public List<Inventory> getAll(){
+        return inventoryRepository.findAll();
     }
 }
